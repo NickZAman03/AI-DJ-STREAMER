@@ -93,10 +93,14 @@ heroku open
 
 ### Required Variables
 ```bash
-CONFLUENT_BOOTSTRAP_SERVERS=your-cluster.confluent.cloud:9092
-CONFLUENT_API_KEY=your-api-key
-CONFLUENT_API_SECRET=your-api-secret
+CONFLUENT_BOOTSTRAP_SERVERS=pkc-921jm.us-east-2.aws.confluent.cloud:9092
+CONFLUENT_API_KEY=WAN53PYS2HCN2U7B
+CONFLUENT_API_SECRET=MJvuq2fBr2OU5MiEvRwOxiBVF5NRdVUlqbFp1uXH2s6k3DMLphXJ5fZrpEGX9V
 KAFKA_TOPIC=live-chat
+PORT=8002
+HOST=0.0.0.0
+DEBUG=false
+LOG_LEVEL=INFO
 ```
 
 ### Optional Variables

@@ -7,12 +7,49 @@ Subscribes to 'live-chat' topic and analyzes mood of incoming messages
 import json
 import time
 import sys
+import os
 from confluent_kafka import Consumer, KafkaError
 from textblob import TextBlob
 import random
 
+# Load environment variables from .env file
+from dotenv import load_dotenv
+load_dotenv()
+
 # Shared queue for SSE streaming (to be set by main.py)
 shared_result_queue = None
+
+def get_kafka_config():
+    """Get Kafka configuration from environment variables or fallback to kafka_config.py"""
+    try:
+        # Try environment variables first (for deployment)
+        bootstrap_servers = os.getenv('CONFLUENT_BOOTSTRAP_SERVERS')
+        api_key = os.getenv('CONFLUENT_API_KEY')
+        api_secret = os.getenv('CONFLUENT_API_SECRET')
+        topic = os.getenv('KAFKA_TOPIC', 'live-chat')
+        
+        if bootstrap_servers and api_key and api_secret:
+            return {
+                'bootstrap.servers': bootstrap_servers,
+                'security.protocol': 'SASL_SSL',
+                'sasl.mechanisms': 'PLAIN',
+                'sasl.username': api_key,
+                'sasl.password': api_secret
+            }, topic
+        
+        # Fallback to kafka_config.py (for local development)
+        from kafka_config import KAFKA_CONFIG, KAFKA_TOPIC
+        return KAFKA_CONFIG, KAFKA_TOPIC
+        
+    except ImportError:
+        print("❌ Error: No Kafka configuration found!")
+        print("Please set environment variables:")
+        print("  CONFLUENT_BOOTSTRAP_SERVERS")
+        print("  CONFLUENT_API_KEY") 
+        print("  CONFLUENT_API_SECRET")
+        print("  KAFKA_TOPIC (optional, defaults to 'live-chat')")
+        print("Or create kafka_config.py with your Confluent Cloud credentials.")
+        return None, None
 
 def analyze_mood(text: str) -> dict:
     """Analyze the mood of the given text using TextBlob sentiment analysis."""
@@ -108,15 +145,13 @@ def process_message(message_data, result_queue=None):
 
 def consume_messages(result_queue=None):
     """Function to run the Kafka consumer in a background thread or as main. Optionally takes a queue."""
-    try:
-        from kafka_config import KAFKA_CONFIG, KAFKA_TOPIC
-    except ImportError:
-        print("❌ Error: kafka_config.py not found!")
-        print("Please create kafka_config.py with your Confluent Cloud credentials.")
+    kafka_config, kafka_topic = get_kafka_config()
+    
+    if kafka_config is None:
         return
     
     print("🎧 Starting AI DJ Streamer Kafka Consumer")
-    print(f"📡 Subscribing to topic: {KAFKA_TOPIC}")
+    print(f"📡 Subscribing to topic: {kafka_topic}")
     print("⏱️  Polling for messages every second...")
     print("🔄 Ready to analyze mood and suggest music!")
     print("-" * 50)
@@ -124,7 +159,7 @@ def consume_messages(result_queue=None):
     # Create Kafka consumer
     try:
         consumer = Consumer({
-            **KAFKA_CONFIG,
+            **kafka_config,
             'group.id': 'ai-dj-streamer-group',
             'auto.offset.reset': 'latest',  # Start from latest messages
             'enable.auto.commit': True,
@@ -133,13 +168,13 @@ def consume_messages(result_queue=None):
         print("✅ Kafka consumer created successfully!")
     except Exception as e:
         print(f"❌ Failed to create Kafka consumer: {e}")
-        print("Please check your Confluent Cloud credentials in kafka_config.py")
+        print("Please check your Confluent Cloud credentials")
         return
     
     # Subscribe to topic
     try:
-        consumer.subscribe([KAFKA_TOPIC])
-        print(f"✅ Subscribed to topic: {KAFKA_TOPIC}")
+        consumer.subscribe([kafka_topic])
+        print(f"✅ Subscribed to topic: {kafka_topic}")
     except Exception as e:
         print(f"❌ Failed to subscribe to topic: {e}")
         consumer.close()

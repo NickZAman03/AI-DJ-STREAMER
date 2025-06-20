@@ -14,6 +14,17 @@ import random
 import threading
 import queue
 
+# Load environment variables from .env file
+from dotenv import load_dotenv
+load_dotenv()
+
+# Set environment variables for local development (if not already set)
+if not os.getenv('CONFLUENT_BOOTSTRAP_SERVERS'):
+    os.environ['CONFLUENT_BOOTSTRAP_SERVERS'] = 'pkc-921jm.us-east-2.aws.confluent.cloud:9092'
+    os.environ['CONFLUENT_API_KEY'] = 'WAN53PYS2HCN2U7B'
+    os.environ['CONFLUENT_API_SECRET'] = 'MJvuq2fBr2OU5MiEvRwOxiBVF5NRdVUlqbFp1uXH2s6k3DMLphXJ5fZrpEGX9V'
+    os.environ['KAFKA_TOPIC'] = 'live-chat'
+
 # Download required NLTK data
 try:
     nltk.data.find('tokenizers/punkt')
