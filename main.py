@@ -29,7 +29,13 @@ if not os.getenv('CONFLUENT_BOOTSTRAP_SERVERS'):
 try:
     nltk.data.find('tokenizers/punkt')
 except LookupError:
-    nltk.download('punkt')
+    try:
+        print("📥 Downloading NLTK data...")
+        nltk.download('punkt', quiet=True)
+        print("✅ NLTK data downloaded successfully")
+    except Exception as e:
+        print(f"⚠️  Warning: Could not download NLTK data: {e}")
+        print("📝 App will continue but some features may be limited")
 
 app = FastAPI(title="AI DJ Streamer", version="1.0.0")
 
@@ -161,7 +167,17 @@ async def analyze_chat_mood(message: ChatMessage):
 @app.get("/health")
 async def health_check():
     """Health check endpoint."""
-    return {"status": "healthy", "service": "ai-dj-streamer"}
+    import platform
+    import sys
+    
+    return {
+        "status": "healthy", 
+        "service": "ai-dj-streamer",
+        "version": "1.0.0",
+        "python_version": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
+        "platform": platform.platform(),
+        "kafka_consumer_running": consumer_running
+    }
 
 @app.post("/mood")
 async def get_mood(request: Request, body: dict = Body(...)):
@@ -218,8 +234,10 @@ def start_consumer():
         print("✅ Kafka consumer started successfully in background thread")
         
     except Exception as e:
-        print(f"❌ Failed to start Kafka consumer: {e}")
-        print("⚠️  SSE streaming will not be available, but the API will still work")
+        print(f"⚠️  Warning: Failed to start Kafka consumer: {e}")
+        print("📝 SSE streaming will not be available, but the API will still work")
+        print("🔧 This is normal if Kafka credentials are not configured")
+        consumer_running = False
 
 @app.on_event("shutdown")
 def stop_consumer():
