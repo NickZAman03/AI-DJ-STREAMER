@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: ai-dj-streamer
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -c "import uvicorn; uvicorn.run('main:app', host='0.0.0.0', port=$PORT)"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.16
+      - key: CONFLUENT_BOOTSTRAP_SERVERS
+        sync: false
+      - key: CONFLUENT_API_KEY
+        sync: false
+      - key: CONFLUENT_API_SECRET
+        sync: false
+      - key: KAFKA_TOPIC
+        value: live-chat 

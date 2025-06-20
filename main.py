@@ -163,7 +163,7 @@ async def get_mood(request: Request, body: dict = Body(...)):
         raise HTTPException(status_code=400, detail="Missing 'text' in request body.")
     blob = TextBlob(text)
     polarity = blob.sentiment.polarity
-    # Simple mapping with more moods
+    # Simple mapping with more moods - Fixed thresholds
     if polarity > 0.5:
         mood = "excited"
     elif polarity > 0.2:
@@ -173,7 +173,7 @@ async def get_mood(request: Request, body: dict = Body(...)):
     elif polarity < -0.2:
         mood = "sad"
     else:
-        mood = "neutral"
+        mood = "neutral"  # This now covers -0.2 <= polarity <= 0.2
     suggested_track = suggest_music(mood)
     return {"mood": mood, "suggested_track": suggested_track}
 
@@ -239,4 +239,5 @@ async def stream(request: Request):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000) 
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port) 
