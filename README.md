@@ -292,9 +292,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/ai-dj-streamer/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/ai-dj-streamer/discussions)
-- **Email**: your.email@example.com
+- **Email**: amanmys04@gmail.com
 
 ---
 
