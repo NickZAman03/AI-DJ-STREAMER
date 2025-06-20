@@ -20,9 +20,9 @@ load_dotenv()
 
 # Set environment variables for local development (if not already set)
 if not os.getenv('CONFLUENT_BOOTSTRAP_SERVERS'):
-    os.environ['CONFLUENT_BOOTSTRAP_SERVERS'] = 'pkc-921jm.us-east-2.aws.confluent.cloud:9092'
-    os.environ['CONFLUENT_API_KEY'] = 'WAN53PYS2HCN2U7B'
-    os.environ['CONFLUENT_API_SECRET'] = 'MJvuq2fBr2OU5MiEvRwOxiBVF5NRdVUlqbFp1uXH2s6k3DMLphXJ5fZrpEGX9V'
+    os.environ['CONFLUENT_BOOTSTRAP_SERVERS'] = 'pkc-41p56.asia-south1.gcp.confluent.cloud:9092'
+    os.environ['CONFLUENT_API_KEY'] = 'QFPRKE7R65LCROC2'
+    os.environ['CONFLUENT_API_SECRET'] = '36Q8gjZhYTnwFlbENZqoa91BuHIyOipkHm/LjbFf8NFsF+IafYcgHuFY6VatZ9WQ'
     os.environ['KAFKA_TOPIC'] = 'live-chat'
 
 # Download required NLTK data
@@ -250,5 +250,11 @@ async def stream(request: Request):
 
 if __name__ == "__main__":
     import uvicorn
+    # Use Render's PORT environment variable, fallback to 8000 for local development
     port = int(os.environ.get("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port) 
+    host = os.environ.get("HOST", "0.0.0.0")
+    
+    print(f"🚀 Starting AI DJ Streamer on {host}:{port}")
+    print(f"🌐 Access your app at: http://{host}:{port}")
+    
+    uvicorn.run(app, host=host, port=port) 

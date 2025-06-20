@@ -2,16 +2,21 @@ services:
   - type: web
     name: ai-dj-streamer
     env: python
+    plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: python -c "import uvicorn; uvicorn.run('main:app', host='0.0.0.0', port=$PORT)"
+    startCommand: python main.py
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.9.16
       - key: CONFLUENT_BOOTSTRAP_SERVERS
-        sync: false
+        value: pkc-41p56.asia-south1.gcp.confluent.cloud:9092
       - key: CONFLUENT_API_KEY
-        sync: false
+        value: QFPRKE7R65LCROC2
       - key: CONFLUENT_API_SECRET
-        sync: false
+        value: 36Q8gjZhYTnwFlbENZqoa91BuHIyOipkHm/LjbFf8NFsF+IafYcgHuFY6VatZ9WQ
       - key: KAFKA_TOPIC
-        value: live-chat 
+        value: live-chat
+      - key: HOST
+        value: 0.0.0.0
+      - key: DEBUG
+        value: false
+      - key: LOG_LEVEL
+        value: INFO 
