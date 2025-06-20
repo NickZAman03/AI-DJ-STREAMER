@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI DJ Streamer</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">🎵 AI DJ Streamer</h1>
+            <p class="subtitle">Analyze chat mood and get music recommendations</p>
+        </header>
+
+        <main class="main-content">
+            <div class="chat-section">
+                <h2>Live Chat Analysis</h2>
+                <div class="input-group">
+                    <textarea 
+                        id="chatInput" 
+                        placeholder="Enter chat message to analyze mood..."
+                        rows="3"
+                    ></textarea>
+                    <button id="analyzeBtn" class="analyze-btn">
+                        <span class="btn-text">Analyze Mood</span>
+                        <span class="btn-loading" style="display: none;">Analyzing...</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <h2>Mood Analysis Results</h2>
+                <div class="results-grid">
+                    <div class="result-card mood-card">
+                        <h3>Detected Mood</h3>
+                        <div class="mood-display" id="moodDisplay">
+                            <span class="mood-text" id="moodText"></span>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" id="confidenceFill"></div>
+                            </div>
+                            <span class="confidence-text" id="confidenceText"></span>
+                        </div>
+                    </div>
+
+                    <div class="result-card music-card">
+                        <h3>Music Vibe</h3>
+                        <div class="music-info">
+                            <p class="vibe-text" id="vibeText"></p>
+                            <div class="genres-list">
+                                <h4>Suggested Genres:</h4>
+                                <div class="genre-tags" id="genreTags"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- New card for original message and music player -->
+                <div class="message-player-card" id="messagePlayerCard" style="display: none;">
+                    <div class="message-section">
+                        <h3>Original Message</h3>
+                        <div class="message-content" id="messageContent"></div>
+                    </div>
+                    
+                    <div class="mood-emoji-section">
+                        <h3>Detected Mood</h3>
+                        <div class="mood-emoji-display">
+                            <span class="mood-emoji" id="moodEmoji">😊</span>
+                            <span class="mood-label" id="moodLabel">Happy</span>
+                        </div>
+                    </div>
+                    
+                    <div class="music-player-section">
+                        <h3>Suggested Track</h3>
+                        <div class="mock-player">
+                            <div class="player-header">
+                                <div class="player-info">
+                                    <div class="track-title" id="trackTitle">Upbeat EDM</div>
+                                    <div class="track-artist">AI DJ Streamer</div>
+                                </div>
+                                <div class="player-controls">
+                                    <button class="control-btn" id="playBtn">▶️</button>
+                                    <button class="control-btn" id="pauseBtn">⏸️</button>
+                                    <button class="control-btn" id="nextBtn">⏭️</button>
+                                </div>
+                            </div>
+                            <div class="player-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="progressFill"></div>
+                                </div>
+                                <div class="time-display">
+                                    <span class="current-time" id="currentTime">0:00</span>
+                                    <span class="total-time" id="totalTime">3:45</span>
+                                </div>
+                            </div>
+                            <div class="player-visualizer">
+                                <div class="visualizer-bars">
+                                    <div class="bar" style="height: 60%"></div>
+                                    <div class="bar" style="height: 80%"></div>
+                                    <div class="bar" style="height: 40%"></div>
+                                    <div class="bar" style="height: 90%"></div>
+                                    <div class="bar" style="height: 70%"></div>
+                                    <div class="bar" style="height: 50%"></div>
+                                    <div class="bar" style="height: 85%"></div>
+                                    <div class="bar" style="height: 65%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="demo-section">
+                <h2>Quick Demo</h2>
+                <p>Try these example messages:</p>
+                <div class="demo-buttons">
+                    <button class="demo-btn" data-text="I'm so happy today! Everything is going great!">😊 Very Happy</button>
+                    <button class="demo-btn" data-text="This is a nice day, feeling good.">😌 Positive</button>
+                    <button class="demo-btn" data-text="Just chilling, nothing special.">😐 Neutral</button>
+                    <button class="demo-btn" data-text="Feeling a bit down today.">😔 Sad</button>
+                    <button class="demo-btn" data-text="I'm really angry and frustrated!">😠 Very Negative</button>
+                </div>
+            </div>
+
+            <div class="live-feed-section">
+                <h2>🎧 Live Feed</h2>
+                <div class="feed-status">
+                    <span class="status-indicator" id="connectionStatus">🔴 Disconnected</span>
+                    <span class="status-text" id="statusText">Connecting to live stream...</span>
+                </div>
+                <div class="feed-container" id="liveFeedContainer">
+                    <div class="feed-placeholder">
+                        <p>Waiting for live chat analysis...</p>
+                        <p class="feed-hint">Start the Kafka producer to see real-time mood analysis!</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>AI DJ Streamer - Powered by FastAPI & TextBlob</p>
+        </footer>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html> 
